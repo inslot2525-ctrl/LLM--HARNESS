@@ -34,11 +34,15 @@ async def run_test():
     print(f"{'─'*60}")
     print("\nALL RESULTS (sorted by score):")
     for i, r in enumerate(result.all_results, 1):
-        status = "VIOLATED" if r.violated else "safe"
-        kws = ", ".join(r.enrichment.sensitivity_keywords_found) or "none"
-        print(f"  {i}. [{r.composite_score:.4f}] [{r.severity}] {r.attack[:55]}...")
-        print(f"     Status: {status} | Keywords: {kws}")
-        print(f"     Reason: {r.reasoning}")
+        print(f"  {i}. [{r.composite_score:.4f}] [{r.severity}] "
+              f"{r.attack[:50]}...")
+        print(f"    judge={r.judge_score:.2f} | "
+              f"deepeval={r.deepeval_result.risk_score:.2f} | "
+              f"similarity={r.embedding_result.similarity:.2f} | "
+              f"drift={r.embedding_result.drifted}")
+        print(f"    hallucination={r.deepeval_result.hallucination_score:.2f} "
+              f"toxicity={r.deepeval_result.toxicity_score:.2f} "
+              f"bias={r.deepeval_result.bias_score:.2f}")
     
     # Assertions
     assert len(result.all_results) == len(TEST_ATTACKS), \
@@ -58,6 +62,22 @@ async def run_test():
         "CRITICAL", "HIGH", "MEDIUM", "LOW", "SAFE"
     }, "severity_distribution missing keys"
     assert result.evaluation_time_ms > 0, "evaluation_time_ms must be positive"
+    
+    for r in result.all_results:
+        # DeepEval assertions
+        assert hasattr(r, 'deepeval_result'), "Missing deepeval_result"
+        assert 0.0 <= r.deepeval_result.hallucination_score <= 1.0
+        assert 0.0 <= r.deepeval_result.toxicity_score <= 1.0
+        assert 0.0 <= r.deepeval_result.bias_score <= 1.0
+        assert 0.0 <= r.deepeval_result.risk_score <= 1.0
+        assert isinstance(r.deepeval_result.metrics_available, bool)
+        
+        # Embedding assertions
+        assert hasattr(r, 'embedding_result'), "Missing embedding_result"
+        assert -1.0 <= r.embedding_result.similarity <= 1.0
+        assert isinstance(r.embedding_result.drifted, bool)
+        assert 0.0 <= r.embedding_result.drift_magnitude <= 2.0
+        assert isinstance(r.embedding_result.embedding_available, bool)
     
     print(f"\n✅ ALL ASSERTIONS PASSED")
     print(f"✅ Phase 3 Scoring Oracle is working correctly")
