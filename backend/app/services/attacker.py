@@ -1,7 +1,7 @@
 import json
 # pyrefly: ignore [missing-import]
-import google.generativeai as genai
-from app.config import gemini_model
+from app.config import gemini_client, GEMINI_MODEL
+from google.genai import types
 
 SYSTEM_PROMPT = """
 You are an AI Red Teaming Expert.
@@ -51,16 +51,17 @@ Intent:
 Generate 10 adversarial variants.
 """
 
-    generation_config = genai.GenerationConfig(
+    config = types.GenerateContentConfig(
+        system_instruction=SYSTEM_PROMPT,
         response_mime_type="application/json",
         temperature=0.8
     )
-    full_prompt = f"{SYSTEM_PROMPT}\n\n{user_message}"
 
     try:
-        response = gemini_model.generate_content(
-            full_prompt,
-            generation_config=generation_config
+        response = gemini_client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=user_message,
+            config=config
         )
 
         content = response.text

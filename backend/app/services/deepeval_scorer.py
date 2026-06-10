@@ -2,7 +2,7 @@ import asyncio
 import hashlib
 # pyrefly: ignore [missing-import]
 from deepeval.models.base_model import DeepEvalBaseLLM
-from app.config import GEMINI_API_KEY, gemini_model
+from app.config import GEMINI_API_KEY, gemini_client, GEMINI_MODEL
 from app.models.schemas import DeepEvalResult
 
 
@@ -14,19 +14,21 @@ class GeminiDeepEvalBackend(DeepEvalBaseLLM):
     """
     
     def load_model(self):
-        return gemini_model
+        return gemini_client
     
     def generate(self, prompt: str) -> str:
-        model = self.load_model()
-        response = model.generate_content(prompt)
+        response = gemini_client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=prompt
+        )
         return response.text
     
     async def a_generate(self, prompt: str) -> str:
-        # DeepEval calls this for async evaluation
-        # Run the sync generate in a thread executor so we don't
-        # block the event loop
-        loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, self.generate, prompt)
+        response = await gemini_client.aio.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=prompt
+        )
+        return response.text
     
     def get_model_name(self) -> str:
         return "gemini-1.5-flash"

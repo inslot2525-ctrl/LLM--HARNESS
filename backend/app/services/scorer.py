@@ -2,8 +2,8 @@ import asyncio
 import time
 import json
 from datetime import datetime
-import google.generativeai as genai
-from app.config import GEMINI_API_KEY, gemini_model
+from google.genai import types
+from app.config import GEMINI_API_KEY, gemini_client, GEMINI_MODEL
 from app.models.schemas import (
     SeverityBadge,
     EnrichmentSignals,
@@ -101,24 +101,18 @@ async def call_gemini_with_retry(
     delay = RETRY_BASE_DELAY
     for attempt in range(1, MAX_RETRIES + 1):
         try:
+            config_args = {}
             if system_prompt:
-                full_prompt = f"{system_prompt}\n\n{prompt}"
-            else:
-                full_prompt = prompt
-                
-            generation_config = None
+                config_args["system_instruction"] = system_prompt
             if use_json_mode:
-                generation_config = genai.GenerationConfig(
-                    response_mime_type="application/json"
-                )
+                config_args["response_mime_type"] = "application/json"
+            
+            config = types.GenerateContentConfig(**config_args) if config_args else None
 
-            loop = asyncio.get_event_loop()
-            response = await loop.run_in_executor(
-                None,
-                lambda: gemini_model.generate_content(
-                    full_prompt,
-                    generation_config=generation_config
-                )
+            response = await gemini_client.aio.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=prompt,
+                config=config
             )
             return response.text or ""
         except Exception as e:

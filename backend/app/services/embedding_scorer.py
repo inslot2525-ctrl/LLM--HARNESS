@@ -2,11 +2,9 @@ import asyncio
 import random
 # pyrefly: ignore [missing-import]
 import numpy as np
-import google.generativeai as genai
-from app.config import GEMINI_API_KEY
+from app.config import GEMINI_API_KEY, gemini_client, EMBEDDING_MODEL
 from app.models.schemas import EmbeddingResult
 
-EMBEDDING_MODEL = "models/text-embedding-004"
 DRIFT_THRESHOLD = 0.75
 
 
@@ -14,14 +12,10 @@ async def get_embedding(text: str) -> list[float] | None:
     """
     Calls Gemini text-embedding-004 to embed a text string.
     
-    Uses google.generativeai.embed_content() — NOT generate_content().
+    Uses gemini_client.aio.models.embed_content().
     This is a different API call from text generation.
     
     On any exception: print the error and return None.
-    
-    IMPORTANT: use the API key that is already configured globally
-    by config.py — do NOT call genai.configure() again here.
-    config.py already calls it once at startup. Just use genai directly.
     """
     if not GEMINI_API_KEY or GEMINI_API_KEY.startswith("mock") or GEMINI_API_KEY == "TODO_KEY":
         # Deterministic mock embedding vector of length 768
@@ -33,16 +27,11 @@ async def get_embedding(text: str) -> list[float] | None:
         return [b + u for b, u in zip(base, unique)]
 
     try:
-        def _embed():
-            result = genai.embed_content(
-                model=EMBEDDING_MODEL,
-                content=text,
-                task_type="retrieval_document"
-            )
-            return result["embedding"]
-            
-        loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, _embed)
+        result = await gemini_client.aio.models.embed_content(
+            model=EMBEDDING_MODEL,
+            contents=text
+        )
+        return result.embeddings[0].values
     except Exception as e:
         print(f"[Embedding] embed_content failed: {e}")
         return None
