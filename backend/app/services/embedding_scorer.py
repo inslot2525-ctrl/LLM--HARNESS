@@ -2,7 +2,7 @@ import asyncio
 import random
 # pyrefly: ignore [missing-import]
 import numpy as np
-from app.config import GEMINI_API_KEY, gemini_client, EMBEDDING_MODEL
+from app.config import GEMINI_API_KEY, gemini_client, EMBEDDING_MODEL, gemini_semaphore
 from app.models.schemas import EmbeddingResult
 
 DRIFT_THRESHOLD = 0.75
@@ -27,10 +27,11 @@ async def get_embedding(text: str) -> list[float] | None:
         return [b + u for b, u in zip(base, unique)]
 
     try:
-        result = await gemini_client.aio.models.embed_content(
-            model=EMBEDDING_MODEL,
-            contents=text
-        )
+        async with gemini_semaphore:
+            result = await gemini_client.aio.models.embed_content(
+                model=EMBEDDING_MODEL,
+                contents=text
+            )
         return result.embeddings[0].values
     except Exception as e:
         print(f"[Embedding] embed_content failed: {e}")

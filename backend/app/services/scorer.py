@@ -3,7 +3,7 @@ import time
 import json
 from datetime import datetime
 from google.genai import types
-from app.config import GEMINI_API_KEY, gemini_client, GEMINI_MODEL
+from app.config import GEMINI_API_KEY, gemini_client, GEMINI_MODEL, gemini_semaphore
 from app.models.schemas import (
     SeverityBadge,
     EnrichmentSignals,
@@ -29,8 +29,17 @@ SENSITIVITY_KEYWORDS = [
     "private", "secret", "admin", "root", "privilege"
 ]
 
-MAX_RETRIES = 3
-RETRY_BASE_DELAY = 1.0   # seconds, doubles each retry
+MAX_RETRIES = 5
+RETRY_BASE_DELAY = 1.0
+
+
+def _parse_retry_after(error_str: str) -> float:
+    """Extract retryDelay seconds from a 429 error string, default 30s."""
+    import re
+    match = re.search(r"'retryDelay':\s*'(\d+)s'", error_str)
+    if match:
+        return float(match.group(1)) + 1.0
+    return 30.0
 
 
 async def call_gemini_with_retry(
@@ -99,30 +108,33 @@ async def call_gemini_with_retry(
 
     last_error = None
     delay = RETRY_BASE_DELAY
-    for attempt in range(1, MAX_RETRIES + 1):
-        try:
-            config_args = {}
-            if system_prompt:
-                config_args["system_instruction"] = system_prompt
-            if use_json_mode:
-                config_args["response_mime_type"] = "application/json"
-            
-            config = types.GenerateContentConfig(**config_args) if config_args else None
+    async with gemini_semaphore:
+        for attempt in range(1, MAX_RETRIES + 1):
+            try:
+                config_args = {}
+                if system_prompt:
+                    config_args["system_instruction"] = system_prompt
+                if use_json_mode:
+                    config_args["response_mime_type"] = "application/json"
 
-            response = await gemini_client.aio.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=prompt,
-                config=config
-            )
-            return response.text or ""
-        except Exception as e:
-            last_error = e
-            if "quota" in str(e).lower() or "rate" in str(e).lower():
-                await asyncio.sleep(2)
-            if attempt < MAX_RETRIES:
-                await asyncio.sleep(delay)
-                delay *= 2.0
-                
+                config = types.GenerateContentConfig(**config_args) if config_args else None
+
+                response = await gemini_client.aio.models.generate_content(
+                    model=GEMINI_MODEL,
+                    contents=prompt,
+                    config=config
+                )
+                return response.text or ""
+            except Exception as e:
+                last_error = e
+                error_str = str(e)
+                if "429" in error_str or "quota" in error_str.lower():
+                    wait = _parse_retry_after(error_str)
+                    await asyncio.sleep(wait)
+                elif attempt < MAX_RETRIES:
+                    await asyncio.sleep(delay)
+                    delay *= 2.0
+
     raise RuntimeError(f"Gemini failed after {MAX_RETRIES} attempts: {str(last_error)}")
 
 
@@ -300,9 +312,9 @@ async def score_single_attack(attack: str) -> AttackResult:
     6. Construct and return AttackResult
     """
     model_response = await probe_target_model(attack)
-    
-    loop = asyncio.get_event_loop()
-    
+
+    loop = asyncio.get_running_loop()
+
     tasks = [
         judge_response(attack, model_response),
         loop.run_in_executor(None, compute_enrichment, model_response),

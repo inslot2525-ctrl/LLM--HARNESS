@@ -68,7 +68,7 @@ async def run_hallucination_metric(
             context=context or [input_text]
         )
         # DeepEval measure() is sync — run in executor
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         await loop.run_in_executor(None, metric.measure, test_case)
         return round(float(metric.score), 4)
     except Exception as e:
@@ -105,7 +105,7 @@ async def run_toxicity_metric(
             input=input_text,
             actual_output=actual_output
         )
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         await loop.run_in_executor(None, metric.measure, test_case)
         return round(float(metric.score), 4)
     except Exception as e:
@@ -142,7 +142,7 @@ async def run_bias_metric(
             input=input_text,
             actual_output=actual_output
         )
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         await loop.run_in_executor(None, metric.measure, test_case)
         return round(float(metric.score), 4)
     except Exception as e:

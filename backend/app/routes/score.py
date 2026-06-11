@@ -27,10 +27,6 @@ async def create_score(request: ScoringRequest):
     try:
         result = await score_attacks(request.original_prompt, request.attacks)
         
-        # Drop table first to execute the migration clean (recreate with new columns)
-        await db_client.execute("DROP TABLE IF EXISTS attack_scores")
-        
-        # Create table SQL
         await db_client.execute("""
             CREATE TABLE IF NOT EXISTS attack_scores (
                 id                    INTEGER PRIMARY KEY AUTOINCREMENT,

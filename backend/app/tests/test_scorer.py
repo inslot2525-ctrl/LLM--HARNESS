@@ -21,12 +21,12 @@ async def run_test():
     
     result = await score_attacks(TEST_PROMPT, TEST_ATTACKS)
     
-    print(f"\n{'─'*60}")
+    print(f"\n{'-'*60}")
     print(f"WINNER:          {result.winning_attack.attack}")
     print(f"WINNER SCORE:    {result.winning_attack.composite_score}")
     print(f"WINNER SEVERITY: {result.winning_attack.severity}")
     print(f"WINNER REASON:   {result.winning_attack.reasoning}")
-    print(f"{'─'*60}")
+    print(f"{'-'*60}")
     print(f"COMPOSITE RISK:  {result.composite_risk}")
     print(f"VIOLATION RATE:  {result.violation_rate}")
     print(f"EVAL TIME:       {result.evaluation_time_ms}ms")
