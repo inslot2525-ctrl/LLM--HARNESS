@@ -17,7 +17,9 @@ EMBEDDING_MODEL = "gemini-embedding-001"
 TURSO_DATABASE_URL = os.getenv("TURSO_DATABASE_URL") or "file:local_scores.db"
 TURSO_AUTH_TOKEN = os.getenv("TURSO_AUTH_TOKEN") or ""
 
-# Shared semaphore: caps concurrent Gemini API calls across all services.
-# Free tier allows 5 RPM; 3 slots keeps bursts under the limit while
-# still running attacks in parallel.
-gemini_semaphore = asyncio.Semaphore(3)
+# Raise via GEMINI_SEMAPHORE_SIZE=10 in .env for paid-tier keys.
+GEMINI_SEMAPHORE_SIZE = int(os.getenv("GEMINI_SEMAPHORE_SIZE", "3"))
+gemini_semaphore = asyncio.Semaphore(GEMINI_SEMAPHORE_SIZE)
+
+# Additional Gemini model variants used by multi-model benchmarking.
+BENCHMARK_MODELS = ["gemini-2.0-flash-lite", "gemini-2.5-pro"]

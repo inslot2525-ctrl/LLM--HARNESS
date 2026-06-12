@@ -1,13 +1,21 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes.analyze import router as analyze_router
 from app.routes.attacks import router as attack_router
 from app.routes.score import router as score_router
+from app.routes.redteam import router as redteam_router
 
-app = FastAPI(
-    title="AI Safety Gateway"
+app = FastAPI(title="AI Safety Gateway")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(analyze_router)
 app.include_router(attack_router)
 app.include_router(score_router)
+app.include_router(redteam_router)
