@@ -1,0 +1,621 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────
+   Dala Design System — exact tokens from refero.design
+   Particle cosmos on a void · violet pulse · no elevation
+   ───────────────────────────────────────────────────────── */
+
+:root {
+  /* Colors */
+  --color-void:         #000000;
+  --color-bone:         #ffffff;
+  --color-ash:          #bdbdbd;
+  --color-smoke:        #9a9a9a;
+  --color-plum-voltage: #8052ff;
+  --color-amber-spark:  #ffb829;
+  --color-lichen:       #15846e;
+
+  /* Typography — Font */
+  --font-acronym: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Typography — Scale (exact token values) */
+  --text-caption:     12px;
+  --leading-caption:  1.5;
+  --tracking-caption: 0.05em;
+
+  --text-body-sm:     14px;
+  --leading-body-sm:  1.5;
+  --tracking-body-sm: 0.05em;
+
+  --text-base:        15px;
+  --leading-base:     1.5;
+  --tracking-base:    0.025em;
+
+  --text-subheading:     18px;
+  --leading-subheading:  1.5;
+  --tracking-subheading: 0.025em;
+
+  --text-heading-sm:     24px;
+  --leading-heading-sm:  1.3;
+  --tracking-heading-sm: 0.021em;
+
+  --text-heading:     36px;
+  --leading-heading:  1.2;
+  --tracking-heading: 0.021em;
+
+  --text-heading-lg:     48px;
+  --leading-heading-lg:  1.1;
+  --tracking-heading-lg: -0.04em;
+
+  --text-display:     78px;
+  --leading-display:  0.9;
+  --tracking-display: -0.04em;
+
+  --text-hero:     113px;
+  --leading-hero:  0.81;
+  --tracking-hero: -0.04em;
+
+  /* Weights */
+  --weight-extralight: 200;
+  --weight-regular:    400;
+  --weight-semibold:   600;
+  --weight-bold:       700;
+
+  /* Spacing (6px base unit) */
+  --spacing-6:   6px;
+  --spacing-12:  12px;
+  --spacing-18:  18px;
+  --spacing-24:  24px;
+  --spacing-30:  30px;
+  --spacing-36:  36px;
+  --spacing-60:  60px;
+  --spacing-96:  96px;
+  --spacing-120: 120px;
+
+  /* Layout */
+  --page-max-width: 1200px;
+  --section-gap:    60px;
+  --card-padding:   24px;
+  --element-gap:    15px;
+
+  /* Radius — everything is 24px */
+  --radius: 24px;
+
+  /* Borders */
+  --border-hairline: 1px solid rgba(255, 255, 255, 0.1);
+  --border-mid:      1px solid rgba(255, 255, 255, 0.18);
+  --border-strong:   1px solid rgba(255, 255, 255, 0.3);
+  --border-plum:     1px solid rgba(128, 82, 255, 0.35);
+  --border-amber:    1px solid rgba(255, 184, 41, 0.35);
+  --border-lichen:   1px solid rgba(21, 132, 110, 0.35);
+}
+
+/* ── Reset ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--color-void);
+  color: var(--color-bone);
+  font-family: var(--font-acronym);
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  letter-spacing: var(--tracking-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track  { background: #000; }
+::-webkit-scrollbar-thumb  { background: rgba(255,255,255,0.1); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+
+/* ══════════════════════════════════════════════════════
+   TYPOGRAPHY UTILITIES — exact Dala type scale
+   ══════════════════════════════════════════════════════ */
+
+/* Eyebrow / kicker: weight 600, 12px, uppercase, +0.05em */
+.type-eyebrow {
+  font-family: var(--font-acronym);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-caption);
+  letter-spacing: var(--tracking-caption);
+  text-transform: uppercase;
+  color: var(--color-bone);
+}
+
+/* Caption: weight 400, 12px */
+.type-caption {
+  font-family: var(--font-acronym);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-caption);
+  letter-spacing: var(--tracking-caption);
+}
+
+/* Body-sm: 14px weight 600 or 400 */
+.type-body-sm {
+  font-family: var(--font-acronym);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-body-sm);
+  letter-spacing: var(--tracking-body-sm);
+}
+
+/* Base: 15px weight 400 */
+.type-base {
+  font-family: var(--font-acronym);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-base);
+  letter-spacing: var(--tracking-base);
+}
+
+/* Subheading: 18px weight 400 */
+.type-sub {
+  font-family: var(--font-acronym);
+  font-size: var(--text-subheading);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-subheading);
+  letter-spacing: var(--tracking-subheading);
+}
+
+/* Heading-sm: 24px weight 400 */
+.type-head-sm {
+  font-family: var(--font-acronym);
+  font-size: var(--text-heading-sm);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-heading-sm);
+  letter-spacing: var(--tracking-heading-sm);
+}
+
+/* Heading: 36px weight 400 */
+.type-head {
+  font-family: var(--font-acronym);
+  font-size: var(--text-heading);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+}
+
+/* Heading-lg: 48px, negative tracking */
+.type-head-lg {
+  font-family: var(--font-acronym);
+  font-size: var(--text-heading-lg);
+  font-weight: 300; /* Space Grotesk min is 300; Acronym would be 200 */
+  line-height: var(--leading-heading-lg);
+  letter-spacing: var(--tracking-heading-lg);
+}
+
+/* Display: 78px weight 200 (300 fallback), -0.04em */
+.type-display {
+  font-family: var(--font-acronym);
+  font-size: var(--text-display);
+  font-weight: 300;
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+/* Hero: 113px weight 200 (300 fallback), -0.04em */
+.type-hero {
+  font-family: var(--font-acronym);
+  font-size: var(--text-hero);
+  font-weight: 300;
+  line-height: var(--leading-hero);
+  letter-spacing: var(--tracking-hero);
+}
+
+/* Mono variant for technical data */
+.type-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-body-sm);
+  letter-spacing: 0.04em;
+}
+
+/* ══════════════════════════════════════════════════════
+   COMPONENT PRIMITIVES
+   ══════════════════════════════════════════════════════ */
+
+/* ── Primary CTA button ──────────────────────────────── */
+.btn-plum {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-6);
+  padding: 14px 20px;
+  border-radius: var(--radius);
+  background: var(--color-plum-voltage);
+  color: var(--color-bone);
+  font-family: var(--font-acronym);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-caption);
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: opacity 120ms ease, transform 80ms ease;
+  text-decoration: none;
+  user-select: none;
+}
+.btn-plum:hover  { opacity: 0.88; }
+.btn-plum:active { transform: scale(0.97); opacity: 1; }
+.btn-plum:disabled { opacity: 0.35; cursor: default; }
+
+/* ── Ghost / outline button ──────────────────────────── */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-6);
+  padding: 13px 19px;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-bone);
+  font-family: var(--font-acronym);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-caption);
+  text-transform: uppercase;
+  border: var(--border-mid);
+  cursor: pointer;
+  transition: border-color 120ms ease, color 120ms ease, transform 80ms ease;
+  text-decoration: none;
+  user-select: none;
+}
+.btn-ghost:hover  { border-color: rgba(255,255,255,0.4); }
+.btn-ghost:active { transform: scale(0.97); }
+.btn-ghost:disabled { opacity: 0.3; cursor: default; }
+
+/* ── Hairline card — a border on the void ────────────── */
+.dala-card {
+  border: var(--border-hairline);
+  border-radius: var(--radius);
+  background: transparent;
+  padding: var(--card-padding);
+  transition: border-color 160ms ease;
+}
+.dala-card:hover { border-color: rgba(255,255,255,0.2); }
+
+.dala-card-plum  { border-color: rgba(128, 82, 255, 0.3); }
+.dala-card-amber { border-color: rgba(255, 184, 41, 0.3); }
+
+/* ── Hairline divider ────────────────────────────────── */
+.divider { width: 100%; height: 1px; background: rgba(255,255,255,0.08); }
+
+/* ── Severity badges ─────────────────────────────────── */
+.sev-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+/* CRITICAL → Amber Spark */
+.sev-critical { color: var(--color-amber-spark); border: var(--border-amber); }
+/* HIGH → Plum Voltage */
+.sev-high     { color: var(--color-plum-voltage); border: var(--border-plum); }
+/* MEDIUM → Bone */
+.sev-medium   { color: var(--color-bone); border: var(--border-mid); }
+/* LOW → Ash */
+.sev-low      { color: var(--color-ash); border: 1px solid rgba(189,189,189,0.25); }
+/* SAFE → Lichen */
+.sev-safe     { color: var(--color-lichen); border: var(--border-lichen); }
+
+/* ── Textarea / Input ────────────────────────────────── */
+.dala-textarea {
+  width: 100%;
+  background: transparent;
+  border: var(--border-hairline);
+  border-radius: var(--radius);
+  color: var(--color-bone);
+  font-family: var(--font-mono);
+  font-size: var(--text-body-sm);
+  line-height: 1.7;
+  letter-spacing: 0.025em;
+  padding: var(--spacing-18) var(--spacing-24);
+  outline: none;
+  resize: none;
+  transition: border-color 160ms ease;
+}
+.dala-textarea::placeholder { color: var(--color-smoke); }
+.dala-textarea:focus { border-color: rgba(249,115,22,0.5); }
+
+/* ── Nav link ────────────────────────────────────────── */
+.nav-link {
+  font-family: var(--font-acronym);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-regular);
+  letter-spacing: 0.021em;
+  color: var(--color-smoke);
+  transition: color 120ms ease;
+  text-decoration: none;
+}
+.nav-link:hover { color: var(--color-bone); }
+.nav-link.active { color: var(--color-bone); }
+
+/* ── Metric bar (1px height, Dala style) ─────────────── */
+.metric-track {
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  position: relative;
+}
+.metric-fill {
+  height: 1px;
+  transition: width 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Phase step indicator ────────────────────────────── */
+.phase-pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: all 160ms ease;
+}
+.phase-pip-idle   { background: transparent; border: 1px solid rgba(255,255,255,0.2); }
+.phase-pip-active { background: var(--brand); border: none; }
+.phase-pip-done   { background: var(--color-bone); border: none; }
+
+/* ── Violated / Refused indicators ──────────────────── */
+.tag-violated {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-amber-spark);
+}
+.tag-refused {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-lichen);
+}
+
+/* ── Loading spinner ─────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ── Animations ──────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes blink {
+  0%, 49%  { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.anim-fade-up   { animation: fadeUp 0.5s ease both; }
+.anim-delay-1   { animation-delay: 0.08s; }
+.anim-delay-2   { animation-delay: 0.16s; }
+.anim-delay-3   { animation-delay: 0.24s; }
+.anim-delay-4   { animation-delay: 0.32s; }
+.anim-delay-5   { animation-delay: 0.40s; }
+
+/* ── Tabular numbers ─────────────────────────────────── */
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* ── Page max-width container ────────────────────────── */
+.page-container {
+  max-width: var(--page-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-36);
+  padding-right: var(--spacing-36);
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding-left: var(--spacing-24);
+    padding-right: var(--spacing-24);
+  }
+}
+
+/* ── Score number display (large tabular) ────────────── */
+.score-display {
+  font-family: var(--font-acronym);
+  font-weight: 300;
+  letter-spacing: var(--tracking-display);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   NEURO — light editorial system (air.inc-genre) for the marketing
+   site. Lives alongside the Dala tokens above (which the /harness app
+   still uses). Muted-indigo accent · paper canvas · dark bands.
+   ══════════════════════════════════════════════════════════════ */
+:root {
+  --paper:        rgba(2, 3, 5, 0.82);  /* semi-transparent so Entropy bleeds through */
+  --surface:      rgba(10, 12, 18, 0.88);
+  --surface-2:    rgba(16, 18, 24, 0.90);
+  --ink:          #ECEDF2;   /* primary text */
+  --ink-2:        #9DA0AB;   /* secondary */
+  --ink-3:        #62656F;   /* muted */
+  --line:         rgba(255,255,255,0.09);
+  --line-2:       rgba(255,255,255,0.05);
+
+  --brand:        #F97316;   /* orange — tuned for dark */
+  --brand-strong: #EA580C;
+  --brand-tint:   rgba(249,115,22,0.14);
+
+  --band:         rgba(4, 5, 7, 0.88);
+  --band-2:       rgba(10, 12, 19, 0.92);
+  --band-line:    rgba(255,255,255,0.08);
+  --on-band:      #ECEDF2;
+  --on-band-2:    #8A8D98;
+  --brand-bright: #FCD34D;
+
+  --r-sm: 10px;
+  --r:    16px;
+  --r-lg: 24px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow:    0 1px 2px rgba(0,0,0,0.4), 0 18px 44px rgba(0,0,0,0.5);
+  --maxw: 1180px;
+}
+
+/* light marketing base — overrides the Dala dark body (the /harness
+   page sets its own dark wrapper, so it is unaffected) */
+body {
+  background: #000000;
+  color: var(--ink);
+  /* whole site on Recursive — alias every font role to the one family */
+  --font-display: var(--font-sans);
+  --font-mono: var(--font-sans);
+  --font-acronym: var(--font-sans);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+/* mono text uses Recursive's MONO axis (1 = monospaced linear) */
+.mono, .eyebrow, .code, .code-band, .chip { font-variation-settings: "MONO" 1; }
+/* big display gets a touch of Recursive's CASL (casual) warmth */
+.display, .phase-tag { font-variation-settings: "CASL" 0.35; }
+
+/* text that inverts against the moving background (difference blend):
+   over dark gradient → white, over bright gradient → dark. */
+.blend-invert { color: #fff; mix-blend-mode: difference; }
+::-webkit-scrollbar-track { background: #000000; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* layout */
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+
+/* type — one grotesque (Geist), character from scale + tracking + weight */
+.eyebrow {
+  font-family: var(--font-mono), monospace;
+  font-size: 11.5px; font-weight: 500;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--brand);
+}
+.display {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700; letter-spacing: -0.05em; line-height: 0.9;
+  font-size: clamp(56px, 9.4vw, 152px); color: var(--ink);
+}
+/* accent word — colour + weight emphasis, not a separate face */
+.accent, .display .accent {
+  font-weight: 700; color: var(--brand-bright);
+}
+.h1 { font-family: var(--font-display), sans-serif; font-weight: 700; letter-spacing: -0.04em; line-height: 0.96; font-size: clamp(38px, 5.8vw, 74px); color: var(--ink); }
+.h2 { font-family: var(--font-display), sans-serif; font-weight: 700; letter-spacing: -0.035em; line-height: 1.02; font-size: clamp(30px, 3.8vw, 54px); color: var(--ink); }
+.h3 { font-family: var(--font-display), sans-serif; font-weight: 650; letter-spacing: -0.025em; line-height: 1.16; font-size: 22px; color: var(--ink); }
+.lead  { font-family: var(--font-sans), sans-serif; font-size: 19.5px; font-weight: 450; line-height: 1.55; color: #C2C5D0; letter-spacing: -0.01em; }
+.body2 { font-family: var(--font-sans), sans-serif; font-size: 15.5px; line-height: 1.66; color: var(--ink-2); }
+.muted { color: var(--ink-3); }
+.mono  { font-family: var(--font-mono), monospace; }
+
+/* section headers stay Recursive but lean on its CASL (casual) axis for a
+   distinct, characterful voice vs the linear body */
+.section-title { font-variation-settings: "CASL" 0.8; letter-spacing: -0.03em; }
+
+/* numbered section kicker — big, bold, can't-miss */
+.phase-tag {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700; letter-spacing: -0.02em; line-height: 1;
+  font-size: clamp(22px, 2.6vw, 36px);
+  text-transform: uppercase; color: var(--brand-bright);
+}
+
+/* big isolated metric numbers (throttlekit-style proof points) */
+.metric {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700; letter-spacing: -0.05em; line-height: 0.86;
+  font-variant-numeric: tabular-nums; color: var(--ink);
+  font-size: clamp(52px, 6.4vw, 92px);
+}
+
+/* motion utilities — give cards a dynamic hover */
+.hover-lift { transition: transform 0.42s cubic-bezier(0.16,1,0.3,1), box-shadow 0.42s ease, border-color 0.3s ease; will-change: transform; }
+.hover-lift:hover { transform: translateY(-6px); }
+.hover-glow:hover { box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.22), 0 24px 60px -22px rgba(249,115,22,0.45); }
+.row-hover { transition: background 0.25s ease, padding-left 0.3s cubic-bezier(0.16,1,0.3,1); }
+.row-hover:hover { background: rgba(249,115,22,0.07); padding-left: 34px; }
+/* animated underline for nav links */
+.nav-link { position: relative; }
+.nav-link::after { content: ""; position: absolute; left: 0; bottom: -4px; height: 1.5px; width: 100%; background: var(--brand); transform: scaleX(0); transform-origin: left; transition: transform 0.3s cubic-bezier(0.16,1,0.3,1); }
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-sans), sans-serif; font-size: 15px; font-weight: 500;
+  letter-spacing: -0.01em; padding: 11px 20px; border-radius: 999px;
+  cursor: pointer; text-decoration: none; border: 1px solid transparent;
+  transition: background 180ms cubic-bezier(0.16,1,0.3,1), border-color 180ms ease,
+    transform 220ms cubic-bezier(0.16,1,0.3,1), color 180ms ease, box-shadow 220ms ease;
+}
+.btn:hover { transform: translateY(-1.5px); }
+.btn:active { transform: translateY(0); transition-duration: 80ms; }
+.btn-primary:hover { box-shadow: 0 10px 30px -10px var(--brand); }
+.btn-primary   { background: var(--brand); color: #fff; }
+.btn-primary:hover { background: var(--brand-strong); }
+/* liquid-metal fill (canvas rides behind the label, clipped to the pill) */
+.btn-liquid {
+  position: relative; overflow: hidden; color: #fff;
+  background: #1E0A00; border: 1px solid rgba(255,255,255,0.16);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.55);
+}
+.btn-liquid:hover { box-shadow: 0 14px 38px -12px rgba(249,115,22,0.6); }
+.btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.btn-secondary:hover { border-color: rgba(255,255,255,0.22); background: var(--surface-2); }
+.btn-onband      { background: #fff; color: var(--band); }
+.btn-onband:hover { background: #e9e9e6; }
+.btn-ghost-band  { background: transparent; color: var(--on-band); border-color: var(--band-line); }
+.btn-ghost-band:hover { border-color: rgba(255,255,255,0.28); }
+
+/* surfaces */
+.card    { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); }
+.card-flat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+.band    { background: var(--band); color: var(--on-band); }
+.hairline-h { width: 100%; height: 1px; background: var(--line); }
+
+/* code block (light) */
+.code {
+  font-family: var(--font-mono), monospace; font-size: 12.5px; line-height: 1.7;
+  color: var(--ink-2); white-space: pre; overflow-x: auto;
+}
+.code-band { color: #C9CBD6; }
+
+/* chip */
+.chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--font-mono), monospace; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 5px 10px; border-radius: 999px;
+  border: 1px solid var(--line); color: var(--ink-2); background: var(--surface);
+}
+
+.tnum { font-variant-numeric: tabular-nums; }
