@@ -93,11 +93,13 @@ export default function Navbar({ logoVisible = true }: { logoVisible?: boolean }
           <LogoMark size={26} />
         </Link>
 
-        {/* right — CTA */}
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <Link href="/harness" className="btn btn-primary" style={{ padding: "9px 18px", fontSize: 14 }}>
-            Launch
-          </Link>
+        {/* right — CTA (hidden on /harness) */}
+        <div style={{ display: "flex", alignItems: "center", gap: 16, minWidth: 80 }}>
+          {pathname !== "/harness" && (
+            <Link href="/harness" className="btn btn-primary" style={{ padding: "9px 18px", fontSize: 14 }}>
+              Launch
+            </Link>
+          )}
         </div>
       </div>
     </header>
