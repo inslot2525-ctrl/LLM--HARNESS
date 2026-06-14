@@ -260,7 +260,7 @@ class SafetyCertificate(BaseModel):
 
 
 class CertificateRequest(BaseModel):
-    all_results: List[EnhancedAttackResult]
+    all_results: List[AttackResult]
     composite_risk: float
     violation_rate: float
     severity_distribution: Dict[str, int]

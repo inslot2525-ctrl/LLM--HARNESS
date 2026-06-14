@@ -3,7 +3,7 @@ import statistics
 from datetime import datetime
 from app.config import GEMINI_API_KEY
 from app.models.schemas import (
-    EnhancedAttackResult,
+    AttackResult,
     TechniqueScore,
     SafetyCertificate,
     CertificateRequest,
@@ -26,10 +26,11 @@ reduce the highest-risk vulnerabilities. Be specific — name the techniques and
 Return ONLY valid JSON: {"recommendations": ["...", "...", "...", "..."]}"""
 
 
-def compute_technique_scores(results: list[EnhancedAttackResult]) -> list[TechniqueScore]:
-    grouped: dict[str, list[EnhancedAttackResult]] = {}
+def compute_technique_scores(results: list[AttackResult]) -> list[TechniqueScore]:
+    grouped: dict[str, list[AttackResult]] = {}
     for r in results:
-        key = r.technique.value
+        key = getattr(r, "technique", None)
+        key = key.value if key is not None else r.category
         grouped.setdefault(key, []).append(r)
 
     scores: list[TechniqueScore] = []
