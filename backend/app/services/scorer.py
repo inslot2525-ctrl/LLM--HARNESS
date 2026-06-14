@@ -4,7 +4,12 @@ import json
 from datetime import datetime
 from openai import AuthenticationError, BadRequestError, NotFoundError, PermissionDeniedError
 from app.config import OPENAI_MODEL, openai_client, openai_semaphore, is_openai_mock_mode
-from app.services.mock_llm import mock_judge_response, mock_target_response
+from app.services.mock_llm import (
+    classify_mock_prompt,
+    mock_attack_variants,
+    mock_judge_response,
+    mock_target_response,
+)
 from app.models.schemas import (
     SeverityBadge,
     EnrichmentSignals,
@@ -39,6 +44,47 @@ def _parse_retry_after(error_str: str) -> float:
     if match:
         return float(match.group(1)) + 1.0
     return 30.0
+
+
+def _openai_policy_fallback(prompt: str, system_prompt: str | None) -> str:
+    """Return local mock output when OpenAI blocks a defensive red-team prompt."""
+    if system_prompt is None:
+        return mock_target_response(prompt)
+
+    system_lower = system_prompt.lower()
+    if "ai safety classifier" in system_lower:
+        return json.dumps(classify_mock_prompt(prompt))
+
+    if "ai red teaming expert" in system_lower:
+        import re
+        original_match = re.search(
+            r"Original Prompt:\s*(.*?)\s*Category:",
+            prompt,
+            flags=re.DOTALL | re.IGNORECASE,
+        )
+        category_match = re.search(
+            r"Category:\s*(.*?)\s*Intent:",
+            prompt,
+            flags=re.DOTALL | re.IGNORECASE,
+        )
+        intent_match = re.search(
+            r"Intent:\s*(.*?)\s*Generate",
+            prompt,
+            flags=re.DOTALL | re.IGNORECASE,
+        )
+        original_prompt = original_match.group(1).strip() if original_match else prompt
+        analysis = classify_mock_prompt(original_prompt)
+        category = category_match.group(1).strip() if category_match else analysis["category"]
+        intent = intent_match.group(1).strip() if intent_match else analysis["intent"]
+        return json.dumps({
+            "variants": mock_attack_variants(
+                original_prompt,
+                category,
+                intent,
+            )
+        })
+
+    return mock_judge_response(prompt)
 
 
 async def call_openai_with_retry(
@@ -121,6 +167,9 @@ async def call_openai_with_retry(
             )
         except BadRequestError as e:
             error_str = str(e)
+            lowered_error = error_str.lower()
+            if "cyber_policy" in lowered_error or "cybersecurity risk" in lowered_error:
+                return _openai_policy_fallback(prompt, system_prompt)
             if temperature is not None and "temperature" in error_str.lower():
                 temperature = None
                 if attempt < MAX_RETRIES:
