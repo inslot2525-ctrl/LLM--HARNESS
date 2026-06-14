@@ -11,6 +11,7 @@ from app.services.scorer import (
     score_attacks
 )
 from app.db.turso import client as db_client
+from app.services.history import save_score_session
 
 router = APIRouter()
 
@@ -97,5 +98,10 @@ async def create_score(request: ScoringRequest):
             )
     except Exception as db_err:
         print(f"[score] DB write failed (non-fatal): {db_err}")
+
+    try:
+        await save_score_session(result)
+    except Exception as hist_err:
+        print(f"[score] History save failed (non-fatal): {hist_err}")
 
     return result

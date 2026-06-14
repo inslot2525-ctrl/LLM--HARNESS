@@ -1,7 +1,7 @@
 import json
 import uuid
 from app.db.turso import client as db
-from app.models.schemas import RedTeamResponse, SessionSummary, HistoryResponse
+from app.models.schemas import RedTeamResponse, ScoringResponse, SessionSummary, HistoryResponse
 
 _CREATE_TABLE = """
 CREATE TABLE IF NOT EXISTS redteam_sessions (
@@ -67,6 +67,45 @@ async def save_session(
             json.dumps(response.severity_distribution),
             json.dumps(owasp),
             1 if used_system_prompt else 0,
+        ],
+    )
+    return session_id
+
+
+async def save_score_session(response: ScoringResponse, safety_grade: str = "") -> str:
+    await _ensure_table()
+    session_id = str(uuid.uuid4())
+    w = response.winning_attack
+    owasp: dict[str, int] = {}
+    for r in response.all_results:
+        if r.violated:
+            cat = getattr(r, "owasp_category", "LLM01: Prompt Injection")
+            owasp[cat] = owasp.get(cat, 0) + 1
+
+    await db.execute(
+        """
+        INSERT INTO redteam_sessions (
+            session_id, prompt, timestamp, composite_risk, violation_rate,
+            best_score, best_attack, best_technique, total_attacks,
+            evaluation_time_ms, safety_grade, severity_distribution,
+            owasp_breakdown, used_system_prompt
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        """,
+        [
+            session_id,
+            response.original_prompt,
+            response.timestamp,
+            response.composite_risk,
+            response.violation_rate,
+            w.composite_score if w else 0.0,
+            (w.attack[:300] if w else ""),
+            (w.category if w else ""),
+            response.total_attacks_evaluated,
+            response.evaluation_time_ms,
+            safety_grade,
+            json.dumps(response.severity_distribution),
+            json.dumps(owasp),
+            0,
         ],
     )
     return session_id
