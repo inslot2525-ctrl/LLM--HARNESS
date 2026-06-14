@@ -36,6 +36,7 @@ dist/
 next-env.d.ts
 
 # Local data and caches
+openai-ready-project/
 *.db
 *.sqlite
 *.sqlite3

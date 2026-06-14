@@ -1,9 +1,0 @@
-.env
-*.db
-.next/
-.deepeval/
-__pycache__/
-*.pyc
-*.pyo
-.venv/
-venv/
